@@ -1,0 +1,27 @@
+{
+  "name": "was",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlengse/was.git"
+  },
+  "author": "mlengse",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mlengse/was/issues"
+  },
+  "homepage": "https://github.com/mlengse/was#readme",
+  "dependencies": {
+    "dotenv": "^7.0.0",
+    "lowdb": "^1.0.0",
+    "moment": "^2.24.0",
+    "nightmare": "^3.0.1",
+    "nightmare-window-manager": "^0.2.2",
+    "node-cron": "^2.0.3"
+  }
+}
