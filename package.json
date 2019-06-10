@@ -20,8 +20,12 @@
     "dotenv": "^7.0.0",
     "lowdb": "^1.0.0",
     "moment": "^2.24.0",
+    "mysql": "^2.17.1",
     "nightmare": "^3.0.1",
+    "nightmare-plus": "^2.5.1",
+    "nightmare-real-mouse": "^1.1.0",
     "nightmare-window-manager": "^0.2.2",
-    "node-cron": "^2.0.3"
+    "node-cron": "^2.0.3",
+    "puppeteer": "^1.15.0"
   }
 }

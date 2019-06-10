@@ -1,4 +1,4 @@
-const { getLiburnas } = require('./nightmarerunner')
+const { getLiburnas } = require('./runner')
 
 const {
 	LIBURNAS_URL
