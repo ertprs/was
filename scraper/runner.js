@@ -1,3 +1,4 @@
+const path = require('path')
 const Nightmare = require('nightmare');
 require('nightmare-window-manager')(Nightmare);
 
@@ -16,9 +17,10 @@ const getLiburnas = () => new Nightmare({
 	}
 })
 
-const getPage = () => new nightmare({
+const getPage = () => new Nightmare({
 	//show: true,
 	webPreferences: {
+    preload: path.resolve(__dirname, 'preload.js'),
 		partition: 'persist: wa'
 	}
 })
