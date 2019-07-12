@@ -15,6 +15,6 @@ console.log(moment().format('LLLL'))
 
 //liburnasObserver(moment)
 
-schedule('30 21 1 * *', liburnasObserver(moment))
+schedule('30 12 1 * *', liburnasObserver(moment))
 
 ;(async () => await waObserver())()

@@ -81,22 +81,26 @@ module.exports = async(tgl, poli, rm) => {
 				break
 			case 'bumil':
 			case 'kia':
-				await simpusPage.click('#no_index_5')
+			case 'mtbs':
+				await simpusPage.click('#no_index_3')
 				break
 			case 'gigi':
 				await simpusPage.click('#no_index_2')
 				break
-			case 'mtbs':
+			case 'imunisasi':
 				await simpusPage.click('#no_index_11')
 				break
-			case 'imunisasi':
-				await simpusPage.click('#no_index_12')
-				break
 			case 'tb':
-				await simpusPage.click('#no_index_13')
+				await simpusPage.click('#no_index_8')
 				break
 			case 'kb':
-				await simpusPage.click('#no_index_14')
+				await simpusPage.click('#no_index_9')
+				break
+			case 'gizi':
+				await simpusPage.click('#no_index_5')
+				break
+			case 'kesling':
+				await simpusPage.click('#no_index_6')
 				break
 			default:
 				await simpusPage.click('#no_index_1')

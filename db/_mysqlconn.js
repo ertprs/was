@@ -11,7 +11,7 @@ const connection = mysql.createPool({
 	connectionLimit: 10,
 	host: MYSQL_HOST,
 	user: MYSQL_USER,
-	//password: MYSQL_PWD,
+	password: MYSQL_PWD,
 	database: MYSQL_DB
 })
 

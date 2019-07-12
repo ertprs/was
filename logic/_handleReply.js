@@ -112,9 +112,12 @@ module.exports = async (chat) => {
 				//console.log(hari)
 				let tgl
 				switch(hari){
-					case 'besok':
-						tgl = moment().add(1, 'd')
+					case 'sekarang':
+					case 'hari ini':
+					case 'hariini':
+						tgl = moment().add(0, 'd')
 						break
+					case 'besok':
 					case 'besuk':
 						tgl = moment().add(1, 'd')
 						break
@@ -162,22 +165,22 @@ module.exports = async (chat) => {
 							(res[prop] == '1') ? result += `Laki-laki | ` : result += `Perempuan | `
 						} else if(prop == 'village_id'){
 							switch(res[prop]){
-								case '10':
-									result += 'Pajang | '
+								case '01':
+									result += 'Kemlayan | '
 									break
-								case '20':
-									result += 'Sondakan | '
+								case '02':
+									result += 'Jayengan | '
 									break
-								case '30':
-									result += 'Laweyan |'
+								case '04':
+									result += 'Tipes |'
 									break
-								case '40':
-									result += 'Karangasem | '
+								case '05':
+									result += 'Serengan | '
 									break
 								case '90':
 									result += 'Luar Wilayah | '
 									break
-								case 'X0':
+								case '91':
 									result += 'Luar Kota | '
 									break
 
@@ -221,16 +224,26 @@ module.exports = async (chat) => {
 			let tgl
 			let dddd
 			switch(hari){
+				case 'sekarang':
+				case 'hariini':
+					tgl = moment().add(0, 'd')
+					let jam = tgl.format('H')
+					if(jam >= 8) {
+						console.log(`${new Date()} request masuk jam: ${jam}`)
+						result = 'Pendaftaran via whatsapp untuk hari ini ditutup pukul 08.00\n'
+						return result
+					}
+					break
 
 				case 'besok':
 				case 'besuk':
 					tgl = moment().add(1, 'd')
-					let jam = tgl.format('H')
-					if(jam >= 21) {
-						console.log(`${new Date()} request masuk jam: ${jam}`)
-						result = 'Pendaftaran via whatsapp untuk besok ditutup pukul 21.00\n'
-						return result
-					}
+//					let jam = tgl.format('H')
+//					if(jam >= 21) {
+//						console.log(`${new Date()} request masuk jam: ${jam}`)
+//						result = 'Pendaftaran via whatsapp untuk besok ditutup pukul 21.00\n'
+//						return result
+//					}
 					break
 				case 'lusa':
 					tgl = moment().add(2, 'd')
@@ -264,9 +277,9 @@ module.exports = async (chat) => {
 								return `poli imunisasi hanya buka hari Selasa.\n`
 							}
 
-							if(poli === 'bumil' && tgl.weekday() !== 0 && tgl.weekday() !== 3) {
-								return `pemeriksaan ibu hamil hanya buka hari Senin dan Kamis.\n`
-							}
+							//if(poli === 'bumil' && tgl.weekday() !== 0 && tgl.weekday() !== 3) {
+							//	return `pemeriksaan ibu hamil hanya buka hari Senin dan Kamis.\n`
+							//}
 
 							if(poli === 'rujukan') {
 								poli = 'umum'
@@ -294,12 +307,16 @@ module.exports = async (chat) => {
 							} else if (umurArr[1] !== 'tahun') {
 								umur = '1'
 							}
-							if((poli === 'mtbs'  && umur > 5) || (poli == 'imunisasi' && umur > 5)) {
+
+							if((poli === 'mtbs'  && umur > 5)) {
 								return `poli ${poli} hanya melayani balita kurang dari 5 tahun.\n`
+							} else if (poli === 'imunisasi' && umur > 6 ) {
+								return `poli ${poli} hanya melayani balita kurang dari 6 tahun.\n`
 							} else if(poli === 'lansia' && umur < 60) {
 								return `poli lansia hanya melayani pasien lanjut usia 60 tahun ke atas.\n`
 							} else if(poli==='kia' && umur <= 5) {
-								return `untuk pemeriksaan balita mohon ganti poli ke mtbs atau imunisasi.\n`								}
+								return `untuk pemeriksaan balita mohon ganti poli ke mtbs atau imunisasi.\n`								
+							}
 
 							//console.log(`${new Date()} ${JSON.stringify(rm[0])}`)
 							tgld = tgl.format('DD-MM-YYYY')
