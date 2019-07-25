@@ -73,6 +73,7 @@ module.exports = async(tgl, poli, rm) => {
 		}
 
 		await simpusPage.goto(`${SIMPUS_URL}visits/add_registrasi`)
+		
 		await simpusPage.evaluate(tgl=> document.getElementById('tglDaftar').setAttribute('value', tgl), tgl)
 		poli = poli.toLowerCase()
 		switch(poli){

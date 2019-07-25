@@ -21,7 +21,7 @@ const getPage = () => new Nightmare({
 	//show: true,
 	webPreferences: {
     preload: path.resolve(__dirname, 'preload.js'),
-		partition: 'persist: wa'
+		partition: 'persist: was'
 	}
 })
 

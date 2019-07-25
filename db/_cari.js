@@ -16,14 +16,14 @@ const findQuery = Arr => {
 	if(params) {
 		if(params.match(/^([^0-9]*)$/)) {
 			query +=  ' WHERE ( `nama` LIKE "%' + params.trim() + '%")';
-		} else if(params.match(/^(08)([0-9]){1,12}$/)) {
-			query +=  ' WHERE (`no_hp` LIKE "' + params + '%")';
+		} else if(params.match(RM_REGEX)) {
+			query +=  ' WHERE (`id` LIKE "' + params + '%")';
 		} else if(params.match(BPJS_REGEX)) {
 			query +=  ' WHERE (`no_kartu` LIKE "' + params + '%")';
 		} else if(params.match(NIK_REGEX)) {
 			query +=  ' WHERE (`nik` LIKE "' + params + '%")';
-		} else if(params.match(RM_REGEX)) {
-			query +=  ' WHERE (`id` LIKE "' + params + '%")';
+		} else if(params.match(/^(08)([0-9]){1,12}$/)) {
+			query +=  ' WHERE (`no_hp` LIKE "' + params + '%")';
 		} 
 	
 	}
@@ -32,14 +32,14 @@ const findQuery = Arr => {
 		params = Arr.shift()
 
 		if(params) {
-			if(params.match(/^(08)([0-9]){1,12}$/)) {
-				query +=  ' AND (`no_hp` LIKE "' + params + '%")';
+			if(params.match(RM_REGEX)) {
+			query +=  ' AND (`id` LIKE "' + params + '%")';
 			} else if(params.match(BPJS_REGEX)) {
 				query +=  ' AND (`no_kartu` LIKE "' + params + '%")';
+			} else if(params.match(/^(08)([0-9]){1,12}$/)) {
+				query +=  ' AND (`no_hp` LIKE "' + params + '%")';
 			} else if(params.match(NIK_REGEX)) {
 				query +=  ' AND (`nik` LIKE "' + params + '%")';
-			} else if(params.match(RM_REGEX)) {
-				query +=  ' AND (`id` LIKE "' + params + '%")';
 			} else {
 				if(query.includes('( `nama` LIKE')) {
 					query +=  ' AND ( LOWER(`alamat`) LIKE LOWER("%' + params.trim().toLowerCase() + '%"))';
