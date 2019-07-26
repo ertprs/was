@@ -1,9 +1,19 @@
-const { getPage } = require('./runner')
+const { getPagePP } = require('./runner')
+
+const reply = require('../logic/_handleReply')
 
 const evalWithMutationObserver = require('../inBrowserFunction/_evalMutation')
-const mainChatFunc = require('../inBrowserFunction/_mainChatFunc')
 const chatFunc = require('../inBrowserFunction/_chatFunc')
-const reply = require('../logic/_handleReply')
+const mainChatFunc = require('../inBrowserFunction/_mainChatFunc')
+
+const isJSONString = str => {
+  try {
+    JSON.parse(str)
+  } catch (e) {
+    return false
+  }
+  return true
+}
 
 const {
   mainChatSel, 
@@ -18,17 +28,6 @@ const {
 
 let halt
 
-const isJSONString = str => {
-  try {
-    JSON.parse(str)
-  } catch (e) {
-    return false
-  }
-  return true
-}
-
-let page = getPage()
-
 const handleReply = async (page, newChatText) => {
   console.log(`${new Date()} replying ${newChatText.user} ${newChatText.content}`)
   try {
@@ -40,7 +39,7 @@ const handleReply = async (page, newChatText) => {
     //await page.insert('#side > div._3CPl4 > div > label > input', newChatText.user)
     //await page.type('#side > div._3CPl4 > div > label > input', '\u000d')
 
-    await page.insert('#main > footer > .copyable-area', newChatText.reply)
+    await page.type('#main > footer > .copyable-area', newChatText.reply)
     await page.type('#main > footer > .copyable-area', '\u000d')
     console.log(`${new Date()} ${newChatText.reply}`)
 
@@ -122,6 +121,8 @@ const handleUnstructured = async (page, newChatText) => {
   }
 }
 
+
+
 const newChat = async (page, chat) => {
   console.log(`${new Date()} handle new chat`)
   let mainChatElArr = []
@@ -148,7 +149,7 @@ const newChat = async (page, chat) => {
 
     try {
       if (containsPandawa) {
-        await page.insert('#main > footer > .copyable-area', 'Harap mengganti kata pandawa dengan nama pasien.')
+        await page.type('#main > footer > .copyable-area', 'Harap mengganti kata pandawa dengan nama pasien.')
         await page.type('#main > footer > .copyable-area', '\u000d')
 
       } else {
@@ -196,22 +197,28 @@ const newChat = async (page, chat) => {
   }
 }
 
-module.exports = async () => {
 
+;(async () => {
+  const page = await getPagePP()
+  
+  page.on('console', handleConsole)
+  console.log('try goto')
+  await page.goto('https://web.whatsapp.com/', {
+    waitUntil: 'networkidle2',
+    timeout: 0
+  })
 
-  try {
-    await page
-      .useragent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3641.0 Safari/537.36')
-      .on('console', handleConsole)
-      .goto('https://web.whatsapp.com')
-      .evaluate(evalWithMutationObserver)
+  await page.waitFor(3000);
 
-  } catch (err) {
-    console.log(`${new Date()} ${err}`)
-  }
-  console.log(`${new Date()} start eval`)
+  console.log('ready eval')
 
-  async function handleConsole(type, mutation) {
+  await page.evaluate(evalWithMutationObserver)
+
+  async function handleConsole(message) {
+    let mutation = message._text
+
+    //console.log(mutation)
+    
     if (isJSONString(mutation)) {
       mutation = JSON.parse(mutation)
       //if (mutation.type === 'childList' && mutation.selector.includes('._15G96')) {
@@ -219,22 +226,22 @@ module.exports = async () => {
         console.log(`${new Date()} mutation`)
         //let clickSel = `${mutation.selector.split(' > ._2EXPL.CxUIE')[0]}`
         let clickSel = `${mutation.selector.split(' > ._2UaNq')[0]}`
-        let wait
 
         try {
-          while (!wait) {
-            wait = await page.exists(clickSel)
-          }
+
+          await page.waitForSelector(clickSel)
 
           let chat = {
             newNotif: false,
             user: false
           }
+
           while (!chat.newNotif && !chat.user) {
             chat = await page.evaluate(chatFunc, clickSel)
           }
+
           let msg = Object.assign({}, chat)
-          if (msg && msg !== null /*&& newNotifArr.indexOf(JSON.stringify(msg)) < 0*/) {
+          if (msg && msg !== null && msg.user) {
             console.log(`${new Date()} new msg`)
 
             while (halt) {
@@ -242,7 +249,7 @@ module.exports = async () => {
             }
             halt = true
 
-            await page.insert('#side > div._2HS9r > div > label > input', msg.user)
+            await page.type('#side > div._2HS9r > div > label > input', msg.user)
             //await page.insert('#side > div._3CPl4 > div > label > input', msg.user)
             //await page.type('#side > div._3CPl4 > div > label > input', '\u000d')
             await page.type('#side > div._2HS9r > div > label > input', '\u000d')
@@ -252,12 +259,15 @@ module.exports = async () => {
           }
 
         } catch (err) {
-          console.log(`${new Date()} ${JSON.stringify(err)}`)
+          throw(err)
         }
+
       }
 
     }
+       
 
   }
 
-}
+
+})()

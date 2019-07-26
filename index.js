@@ -8,7 +8,7 @@ moment.locale('id')
 
 const liburnasObserver = require('./logic/liburnas')
 
-const waObserver = require('./scraper/waObserver')
+const waObserver = require('./scraper/waObserverPP')
 
 console.log('first run')
 console.log(moment().format('LLLL'))

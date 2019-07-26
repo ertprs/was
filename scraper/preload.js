@@ -49,13 +49,17 @@ Object.defineProperties(window, {
     enumerable: true,
     writable: true,
 //    writable: false,
-    value: null
+    value: null,
+//    get: function() { return null; },
+//    set: function() {}
   },
   onbeforeunload: {
     enumerable: true,
     writable: true,
 //    writable: false,
-    value: null
+    value: null,
+//    get: function() { return null; },
+//    set: function() {}
   }
 })
 
