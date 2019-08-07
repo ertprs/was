@@ -2,6 +2,32 @@ module.exports = {
   days: ['besok', 'besuk', 'lusa'],
   pols: ['umum', 'kia', 'gigi', 'bumil', 'lansia', 'mtbs', 'kb', 'tb', 'imunisasi', 'rujukan', 'gizi', 'kesling'],
   keywords: ['tes', 'cek', 'cari', 'daftar'],
+  village: [
+    {
+      id: '01',
+      des: 'Kemlayan'
+    },
+    {
+      id: '02',
+      des: 'Jayengan'
+    },
+    {
+      id: '04',
+      des: 'Tipes'
+    },
+    {
+      id: '05',
+      des: 'Serengan'
+    },
+    {
+      id: '90',
+      des: 'Luar Wilayah'
+    },
+    {
+      id: '91',
+      des: 'Luar Kota'
+    }
+  ],
   unit: {
     '01': 'BP. Umum',
     '02': 'BP. Gigi',

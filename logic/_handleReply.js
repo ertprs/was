@@ -3,6 +3,7 @@ const cekDaftar = require('../db/_cekDaftar')
 const daftar = require('./_daftar')
 const cari = require('../db/_cari')
 const libur = require('../db/_libur')
+const config = require('../config')
 
 moment.locale('id')
 
@@ -164,26 +165,11 @@ module.exports = async (chat) => {
 						if(prop == 'sex_id'){
 							(res[prop] == '1') ? result += `Laki-laki | ` : result += `Perempuan | `
 						} else if(prop == 'village_id'){
-							switch(res[prop]){
-								case '01':
-									result += 'Kemlayan | '
-									break
-								case '02':
-									result += 'Jayengan | '
-									break
-								case '04':
-									result += 'Tipes |'
-									break
-								case '05':
-									result += 'Serengan | '
-									break
-								case '90':
-									result += 'Luar Wilayah | '
-									break
-								case '91':
-									result += 'Luar Kota | '
-									break
-
+							let village = config.village
+							for( let v of village){
+								if(res[prop] === v.id){
+									result += `${v.des} | `
+								}
 							}
 						} else if(prop == 'orchard_id') {
 							result += `RW: ${res[prop].slice(-2)} | `
