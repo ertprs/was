@@ -89,13 +89,13 @@ module.exports = async(tgl, poli, rm) => {
 				await simpusPage.click('#no_index_2')
 				break
 			case 'imunisasi':
-				await simpusPage.click('#no_index_11')
+				await simpusPage.click('#no_index_10')
 				break
 			case 'tb':
-				await simpusPage.click('#no_index_8')
+				await simpusPage.click('#no_index_7')
 				break
 			case 'kb':
-				await simpusPage.click('#no_index_9')
+				await simpusPage.click('#no_index_8')
 				break
 			case 'gizi':
 				await simpusPage.click('#no_index_5')
