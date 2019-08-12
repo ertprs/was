@@ -1,5 +1,5 @@
 module.exports = {
-  days: ['besok', 'besuk', 'lusa'],
+  days: ['sekarang', 'hari ini', 'hariini', 'besok', 'besuk', 'lusa'],
   pols: ['umum', 'kia', 'gigi', 'bumil', 'lansia', 'mtbs', 'kb', 'tb', 'imunisasi', 'rujukan', 'gizi', 'kesling'],
   keywords: ['tes', 'cek', 'cari', 'daftar'],
   village: [
