@@ -14,6 +14,7 @@ let unit = {}
 pols.map( ({ id, nama}) => unit[id] = nama )
 
 module.exports = async(tgl, poli, rm) => {
+	console.log(poli)
 	rm.nama = rm.nama.trim()
 
 	let dial = ''
@@ -82,11 +83,12 @@ module.exports = async(tgl, poli, rm) => {
 		await simpusPage.evaluate(tgl=> document.getElementById('tglDaftar').setAttribute('value', tgl), tgl)
 		poli = poli.toLowerCase()
 
-		let idPoli = pols.map( ({ id, alias }) => {
+		let idPoli
+		pols.map( ({ id, alias }) => {
 			if( alias && Array.isArray(alias) && alias.indexOf(poli) > -1 ) {
-				return id
+				idPoli = id
 			} else {
-				return '01'
+				idPoli = '01'
 			}
 		})
 

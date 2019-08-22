@@ -15,7 +15,11 @@ const {
 
 const poliArr = []
 
-pols.map( ({ alias }) => alias ? alias.map( st => poliArr.push(st)) : '')
+pols.map( ({ alias }) => {
+	if(alias && Array.isArray(alias)) {
+		alias.map( st => poliArr.push(st))
+	}
+})
 
 const cariFunc = async (chatArr, result ) => {
 	if(typeof result === 'undefined'){
@@ -312,6 +316,7 @@ module.exports = async (chat) => {
 
 							//console.log(`${new Date()} ${JSON.stringify(rm[0])}`)
 							tgld = tgl.format('DD-MM-YYYY')
+							
 							result = await daftar(hari, dddd, tgld, poli, rm[0])
 
 							result += `\nMohon kesediaannya untuk dapat mengisi form kepuasan pelanggan berikut:\n ${process.env.FORM_LINK}`
