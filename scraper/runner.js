@@ -3,7 +3,7 @@ const config = require('./config.js');
 const puppeteer = require('puppeteer');
 
 const Nightmare = require('nightmare');
-require('nightmare-window-manager')(Nightmare);
+//require('nightmare-window-manager')(Nightmare);
 
 //const nightmare = require('nightmare-plus')
 //require('nightmare-real-mouse')(nightmare)

@@ -54,7 +54,7 @@ module.exports = async (page, newChatText) => {
     }
   }
 
-  rawArr.map(params => {
+  if(Array.isArray(rawArr)) rawArr.map(params => {
     if (params.match(RM_REGEX)) {
       formattedArr.push(params)
     } else if (params.match(BPJS_REGEX)) {

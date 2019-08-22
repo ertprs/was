@@ -1,5 +1,5 @@
 const getconn = require('./_mysqlconn')
-const connection = getconn()
+const { pool } = getconn()
 const {
 	RM_REGEX,
 	BPJS_REGEX,
@@ -70,7 +70,7 @@ module.exports = async (chatArr) => await new Promise ( resolve =>{
 	//console.log(query)
 
 	if(query !== 'SELECT `id`, `nama`, `tgl_lahir`, `sex_id`, `alamat`,  `orchard_id`, `village_id`, `nik`, `no_kartu`, `no_hp` FROM `patients`') {
-		connection.getConnection( (err, connection) => {
+		pool.getConnection( (err, connection) => {
 			err ? console.log(`${new Date()} error: ${err.stack}`) : '' //console.log(`connected id: ${connection.threadId}`);
 			connection.query(query, (err, results, fields) => {
 				let res = []

@@ -8,7 +8,7 @@ const {
 	MYSQL_DB
 } = process.env
 
-const connection = mysql.createPool({
+const pool = mysql.createPool({
 	connectionLimit: 10,
 	host: MYSQL_HOST,
 	user: MYSQL_USER,
@@ -16,4 +16,14 @@ const connection = mysql.createPool({
 	database: MYSQL_DB
 })
 
-module.exports = () => connection
+const connection = mysql.createConnection({
+	host: MYSQL_HOST,
+	user: MYSQL_USER,
+	password: MYSQL_PWD,
+	database: MYSQL_DB
+});
+
+module.exports = () => ({
+	pool,
+	connection
+})

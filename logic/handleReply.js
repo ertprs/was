@@ -12,6 +12,7 @@ module.exports = async (page, newChatText) => {
     //await page.type('#side > div._3CPl4 > div > label > input', '\u000d')
 
     await page.type('#main > footer > .copyable-area', newChatText.reply)
+
     await page.type('#main > footer > .copyable-area', '\u000d')
     console.log(`${new Date()} ${newChatText.reply}`)
 

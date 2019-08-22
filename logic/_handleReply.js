@@ -308,7 +308,8 @@ module.exports = async (chat) => {
 							tgld = tgl.format('DD-MM-YYYY')
 							result = await daftar(hari, dddd, tgld, poli, rm[0])
 
-							//result += '\nMohon kesediaannya untuk mengisi form kepuasan pelanggan berikut:\nhttps://goo.gl/forms/T6WsWFt8bGkmNPtM2'
+							result += `\nMohon kesediaannya untuk dapat mengisi form kepuasan pelanggan berikut:\n ${process.env.FORM_LINK}`
+							
 							return result + '\n'
 
 						} else {
