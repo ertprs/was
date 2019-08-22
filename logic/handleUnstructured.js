@@ -8,6 +8,12 @@ const {
   pols,
 } = require('../config')
 
+const polArr = []
+pols.map(({ alias }) => {
+  if(alias && Array.isArray(alias) ){
+    alias.map( e => polArr.push(e))
+  }
+})
 
 module.exports = async (page, newChatText) => {
   let rawText = newChatText.content
@@ -43,7 +49,7 @@ module.exports = async (page, newChatText) => {
       formattedArr.push(hari)
     }
     let poli
-    for (let pol of pols) {
+    for (let pol of polArr) {
       if (rawText.includes(pol)) {
         poli = `${pol}`
         break
