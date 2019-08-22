@@ -7,7 +7,11 @@ const {
 	SIMPUS_PWD
 } = process.env
 
-const {unit} = require('../config')
+const { pols } = require('../config')
+
+let unit = {}
+
+pols.map( ({ id, nama}) => unit[id] = nama )
 
 module.exports = async(tgl, poli, rm) => {
 	rm.nama = rm.nama.trim()
@@ -40,6 +44,7 @@ module.exports = async(tgl, poli, rm) => {
 		
 		return terdaft
 	}
+
 	terdaftar += await getTerdaftar()
 
 	if(terdaftar !== '') {
@@ -76,40 +81,21 @@ module.exports = async(tgl, poli, rm) => {
 		
 		await simpusPage.evaluate(tgl=> document.getElementById('tglDaftar').setAttribute('value', tgl), tgl)
 		poli = poli.toLowerCase()
-		switch(poli){
-			case 'umum':
-				await simpusPage.click('#no_index_1')
-				break
-			case 'bumil':
-			case 'kia':
-			case 'mtbs':
-				await simpusPage.click('#no_index_3')
-				break
-			case 'gigi':
-				await simpusPage.click('#no_index_2')
-				break
-			case 'imunisasi':
-				await simpusPage.click('#no_index_10')
-				break
-			case 'tb':
-				await simpusPage.click('#no_index_7')
-				break
-			case 'kb':
-				await simpusPage.click('#no_index_8')
-				break
-			case 'gizi':
-				await simpusPage.click('#no_index_5')
-				break
-			case 'kesling':
-				await simpusPage.click('#no_index_6')
-				break
-			default:
-				await simpusPage.click('#no_index_1')
-				break
 
-		}
+		let idPoli = pols.map( ({ id, alias }) => {
+			if( alias && Array.isArray(alias) && alias.indexOf(poli) > -1 ) {
+				return id
+			} else {
+				return '01'
+			}
+		})
+
+		await simpusPage.click(`input.cb-unit-id[value='${idPoli}']`)
+
 		await simpusPage.type('#patient_id', rm.id)
+
 		await simpusPage.click('#searchidbtn')
+
 		let ada
 		while(!ada){
 			ada = await simpusPage.evaluate(id => {

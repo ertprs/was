@@ -1,13 +1,21 @@
 const data_kunj = require('./_data_kunj')
 
-const { unit } = require('../config')
+const { pols } = require('../config')
+
+let unit = {}
+pols.map( ({ id, nama }) => {
+	unit[id] = nama
+})
 
 module.exports = async(tgl) => {
-    let terdaft = ''
+		
+	let terdaft = ''
 	let res = await data_kunj(tgl.split('-').reverse().join('-'))
-    let daftArr=[]
+	
+	let daftArr=[]
 	if(res.length) for(let i=0; i < res.length ; i++) {
-        let r = res[i]
+	
+		let r = res[i]
 		let kun = {
 			dateTime: r.tanggal,
 			rm: r.patient_id,
@@ -17,9 +25,13 @@ module.exports = async(tgl) => {
 			alamat: r.alamat,
 			poli: unit[r.unit_id]
 		}
-        daftArr[daftArr.length] = `rekam medis ${kun.rm} atas nama ${kun.nama} sudah terdaftar dgn no urut ${1+daftArr.length} di ${kun.poli}\n`
-    }
+	
+		daftArr[daftArr.length] = `rekam medis ${kun.rm} atas nama ${kun.nama} sudah terdaftar dgn no urut ${1+daftArr.length} di ${kun.poli}\n`
+	
+	}
 
-    daftArr.length ? terdaft = daftArr.join('') : terdaft = `belum ada daftar kunjungan untuk tgl ${tgl}.\n`
-    return terdaft
+	
+	daftArr.length ? terdaft = daftArr.join('') : terdaft = `belum ada daftar kunjungan untuk tgl ${tgl}.\n`
+	
+	return terdaft
 }

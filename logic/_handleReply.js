@@ -13,7 +13,9 @@ const {
 } = require('../config')
 
 
-const poliArr = pols
+const poliArr = []
+
+pols.map( ({ alias }) => alias ? alias.map( st => poliArr.push(st)) : '')
 
 const cariFunc = async (chatArr, result ) => {
 	if(typeof result === 'undefined'){
@@ -262,6 +264,7 @@ module.exports = async (chat) => {
 							if(poli === 'imunisasi' && tgl.weekday() !== 1) {
 								return `poli imunisasi hanya buka hari Selasa.\n`
 							}
+
 
 							//if(poli === 'bumil' && tgl.weekday() !== 0 && tgl.weekday() !== 3) {
 							//	return `pemeriksaan ibu hamil hanya buka hari Senin dan Kamis.\n`
