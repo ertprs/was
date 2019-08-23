@@ -1,5 +1,8 @@
 const MySQLEvents = require('@rodrigogs/mysql-events');
 
+const moment = require('moment')
+moment.locale('id')
+
 const getconn = require('../db/_mysqlconn')
 
 const { getPagePP } = require('./runner')
@@ -100,16 +103,20 @@ module.exports = async () => {
 		expression: '*',//'simpus.visits',
 		statement: MySQLEvents.STATEMENTS.ALL, //INSERT,
     onEvent: async (event) => { // You will receive the events here
-			console.log(`new event => type: ${event.type}, table: ${event.table}`)
-      if(event.type === 'INSERT' && event.table === 'visits' && event.affectedRows.length) {
+			let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
+			let jam = moment(event.timestamp, 'x').format('H')
+
+			console.log(`new event => type: ${event.type}, table: ${event.table}, timestamp: ${event.timestamp}, tgl: ${tglDaftar}, jam: ${jam}`)
+			
+			if(event.type === 'INSERT' && event.table === 'visits' && event.affectedRows.length) {
 				let after = event.affectedRows[0].after
 				
-				console.log(JSON.stringify(after))
+				//let tglDaftar = moment(after.tanggal).format('DD-MM-YYYY')
+				//let jam = moment().format('H')
 
-				let tglDaftar = moment(after.tanggal).format('DD-MM-YYYY')
-				let jam = moment().format('H')
-				console.log(`${new Date()} new visits => tgl: ${tglDaftar}, jam: ${jam}`)
-				if(tglDaftar === moment().format('DD-MM-YYYY') ) { //&& jam >= 8 ) {
+				console.log(`new visits ${JSON.stringify(after)}`)
+
+				if(tglDaftar === moment().format('DD-MM-YYYY') && jam >= 8 ) {
 
 					try {
 						let res = await connect(`SELECT * FROM patients WHERE id = "${after.patient_id}"`)
