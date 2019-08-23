@@ -97,16 +97,18 @@ module.exports = async () => {
 
 	instance.addTrigger({
 		name: 'NEW_VISITS',
-		expression: 'simpus.visits',
-		statement: MySQLEvents.STATEMENTS.INSERT,
+		expression: '*',//'simpus.visits',
+		statement: MySQLEvents.STATEMENTS.ALL, //INSERT,
     onEvent: async (event) => { // You will receive the events here
-			console.log(event)
-      if(event.affectedRows.length) {
-        let after = event.affectedRows[0].after
+			console.log(`new event => type: ${event.type}, table: ${event.table}`)
+      if(event.type === 'INSERT' && event.table === 'visits' && event.affectedRows.length) {
+				let after = event.affectedRows[0].after
+				
+				console.log(JSON.stringify(after))
 
 				let tglDaftar = moment(after.tanggal).format('DD-MM-YYYY')
 				let jam = moment().format('H')
-				console.log(`${new Date()} new visits ${tglDaftar} ${jam}`)
+				console.log(`${new Date()} new visits => tgl: ${tglDaftar}, jam: ${jam}`)
 				if(tglDaftar === moment().format('DD-MM-YYYY') ) { //&& jam >= 8 ) {
 
 					try {
@@ -122,13 +124,14 @@ module.exports = async () => {
 									delete all[prop]
 								}
 							}
+
 							//send wa here
 							all.no_hp = `62${all.no_hp.substr(1)}`
 							//console.log(JSON.stringify(all, null, 2));
 							
 							let name = all.nama
 							let number = all.no_hp
-							console.log(`${new Date()} kunj baru ${name} ${number}`)
+							console.log(`kunj baru ${new Date()} => nama: ${name}, no hp: ${number}`)
 						
 							let text = `Terima kasih atas kunjungan ${name}, ke Puskesmas ${process.env.PUSKESMAS}.\n Mohon kesediaannya untuk dapat mengisi form kepuasan pelanggan berikut:\n ${process.env.FORM_LINK}\n`
 						
@@ -164,6 +167,7 @@ module.exports = async () => {
 									await page.type('#main > footer > .copyable-area', '\u000d')
 									//await page.click("#main > footer > ._3pkkz.copyable-area button._35EW6");
 									console.log(`${new Date()} msg sent`)
+									console.log(`${text}`)
 								}
 							}
 					
