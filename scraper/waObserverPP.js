@@ -12,9 +12,9 @@ const newChat = require('../logic/newChat')
 
 let halt
 
-const { pool } = getconn()
+const { connection } = getconn()
 
-const instance = new MySQLEvents(pool, {
+const instance = new MySQLEvents(connection, {
 	startAtEnd: true,
 	excludedSchemas: {
 		mysql: true,
@@ -100,7 +100,7 @@ module.exports = async () => {
 		expression: 'simpus.visits',
 		statement: MySQLEvents.STATEMENTS.INSERT,
     onEvent: async (event) => { // You will receive the events here
-
+			console.log(event)
       if(event.affectedRows.length) {
         let after = event.affectedRows[0].after
 
