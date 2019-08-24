@@ -57,7 +57,9 @@ module.exports = async (page, chat) => {
           contentArr = contentArr.map(e => e.trim())
           contentArr.shift()
           let firstWord = contentArr.shift()
-          firstWord = firstWord.split(' ').join('')
+          if(firstWord){
+            firstWord = firstWord.split(' ').join('')
+          }
           let isKeyword = keywords.filter(e => {
             if (firstWord == e) {
               return true

@@ -12,6 +12,8 @@ const isJSONString = require('../logic/_isJSONString')
 const evalWithMutationObserver = require('../inBrowserFunction/_evalMutation')
 const chatFunc = require('../inBrowserFunction/_chatFunc')
 const newChat = require('../logic/newChat')
+ 
+const { BPJS_REGEX } = require('../config')
 
 let halt
 
@@ -36,8 +38,7 @@ module.exports = async () => {
   page.on('console', handleConsole)
   console.log('try goto')
 
-  await page
-  .goto('https://web.whatsapp.com/', {
+  await page.goto('https://web.whatsapp.com/', {
     waitUntil: 'networkidle2',
     timeout: 0
   })
@@ -79,7 +80,10 @@ module.exports = async () => {
 
             while (halt) {
               await new Promise(resolve => setTimeout(() => resolve(), 1000))
-            }
+
+							//console.log(`tunggu ${new Date()}`)
+
+						}
             halt = true
 
             await page.type('#side > div._2HS9r > div > label > input', msg.user)
@@ -110,10 +114,40 @@ module.exports = async () => {
 			let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
 			let jam = moment(event.timestamp, 'x').format('H')
 
+			let after, res, re, all
+
 			console.log(`new event => type: ${event.type}, table: ${event.table}, timestamp: ${event.timestamp}, tgl: ${tglDaftar}, jam: ${jam}`)
+
+			if( event.affectedRows.length) {
+				after = event.affectedRows[0].after
+				try{
+					res = await connect(`SELECT * FROM patients WHERE id = "${after.patient_id}"`)
+					re = res[0]
+					all = Object.assign({}, after, {
+						visit_id: after.id
+					}, re)
+
+					if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && after.no_kartu && after.no_kartu.match(BPJS_REGEX)) {
+						res = await connect(`SELECT * FROM bpjs_verifications WHERE no_bpjs = "${after.no_kartu}"`)
+						if(res[0].json_response.response) {
+							re = JSON.parse(res[0].json_response.response)
+							all = Object.assign({}, all, re)
+
+							if(all.no_hp.match(/^(08)([0-9]){1,12}$/) && all.noHP.match(/^(08)([0-9]){1,12}$/)) {
+								all.no_hp = all.noHP
+							}
+
+						}
+					}
+
+					console.log(`data pasien: ${JSON.stringify(all)}`)
+
+				}catch(err) {
+					console.log(`${new Date()} ${err}`)
+				}
+			}
 			
-			if(event.type === 'INSERT' && event.table === 'visits' && event.affectedRows.length) {
-				let after = event.affectedRows[0].after
+			if( event.type === 'INSERT' /* && event.table === 'visits'*/ ) {
 				
 				//let tglDaftar = moment(after.tanggal).format('DD-MM-YYYY')
 				//let jam = moment().format('H')
@@ -123,14 +157,6 @@ module.exports = async () => {
 				if(tglDaftar === moment().format('DD-MM-YYYY')){//} && jam >= 8 ) {
 
 					try {
-						let res = await connect(`SELECT * FROM patients WHERE id = "${after.patient_id}"`)
-						let re = res[0]
-						let all = Object.assign({}, after, {
-							visit_id: after.id
-						}, re)
-
-						console.log(`data pasien: ${JSON.stringify(all)}`)
-		
 						if(all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
 							for(let prop in all){
 								if(all[prop] === '' || !all[prop]){
@@ -150,6 +176,7 @@ module.exports = async () => {
 						
 							while(halt){
 								await new Promise(resolve=>setTimeout(()=>resolve(), 1000))
+							//	console.log(`tunggu ${new Date()}`)
 							}
 					
 							halt = true
@@ -172,8 +199,6 @@ module.exports = async () => {
 									}
 									return false
 								})
-
-
 
 								canSend = await page.evaluate(() => {
 									let a = document.querySelector("#main > footer > .copyable-area")
