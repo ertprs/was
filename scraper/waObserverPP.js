@@ -15,17 +15,21 @@ const newChat = require('../logic/newChat')
 
 let halt
 
-const { connection } = getconn()
+const { getConnection, connect } = getconn()
 
-const instance = new MySQLEvents(connection, {
-	startAtEnd: true,
-	excludedSchemas: {
-		mysql: true,
-	},
-});
 
 module.exports = async () => {
-  await instance.start()
+
+	const connection = await getConnection()
+
+	const instance = new MySQLEvents(connection, {
+		startAtEnd: true,
+		excludedSchemas: {
+			mysql: true,
+		},
+	});
+
+	await instance.start()
 
   const page = await getPagePP()
   
@@ -100,7 +104,7 @@ module.exports = async () => {
 
 	instance.addTrigger({
 		name: 'NEW_VISITS',
-		expression: '*',//'simpus.visits',
+		expression: 'simpus.visits',
 		statement: MySQLEvents.STATEMENTS.ALL, //INSERT,
     onEvent: async (event) => { // You will receive the events here
 			let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
@@ -114,9 +118,9 @@ module.exports = async () => {
 				//let tglDaftar = moment(after.tanggal).format('DD-MM-YYYY')
 				//let jam = moment().format('H')
 
-				console.log(`new visits ${JSON.stringify(after)}`)
+				console.log(`new visits`)// ${JSON.stringify(after)}`)
 
-				if(tglDaftar === moment().format('DD-MM-YYYY') && jam >= 8 ) {
+				if(tglDaftar === moment().format('DD-MM-YYYY')){//} && jam >= 8 ) {
 
 					try {
 						let res = await connect(`SELECT * FROM patients WHERE id = "${after.patient_id}"`)
@@ -124,6 +128,8 @@ module.exports = async () => {
 						let all = Object.assign({}, after, {
 							visit_id: after.id
 						}, re)
+
+						console.log(`data pasien: ${JSON.stringify(all)}`)
 		
 						if(all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
 							for(let prop in all){
@@ -169,7 +175,14 @@ module.exports = async () => {
 
 
 
-								canSend = await page.exists("#main > footer > .copyable-area")
+								canSend = await page.evaluate(() => {
+									let a = document.querySelector("#main > footer > .copyable-area")
+									if(a) {
+										return true
+									}
+									return false
+								})
+
 								if (canSend) {
 									await page.type('#main > footer > .copyable-area', '\u000d')
 									//await page.click("#main > footer > ._3pkkz.copyable-area button._35EW6");

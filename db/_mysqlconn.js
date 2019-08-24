@@ -16,14 +16,33 @@ const pool = mysql.createPool({
 	database: MYSQL_DB
 })
 
-const connection = mysql.createConnection({
-	host: MYSQL_HOST,
-	user: MYSQL_USER,
-	password: MYSQL_PWD,
-	database: MYSQL_DB
-});
+const getConnection = async () => {
+	return await new Promise ( resolve => {
+		pool.getConnection( (err, connection) => {
+			err ? console.log(`${new Date()} error: ${err.stack}`) : '' //console.log(`connected id: ${connection.threadId}`);
+			resolve(connection)
+		})
+	})
+}
+
+const connect = async (query) => {
+	return await new Promise( resolve => {
+		pool.getConnection( (err, connection) => {
+			err ? console.log(`${new Date()} error: ${err.stack}`) : '' //console.log(`connected id: ${connection.threadId}`);
+			connection.query(query, (err, results, fields) => {
+				err ? console.log(`${new Date()} error: ${err.stack}`) : null;
+				connection.release()
+				resolve(results)
+			})
+
+		})
+	
+	})
+
+}
 
 module.exports = () => ({
 	pool,
-	connection
+	getConnection,
+	connect
 })
