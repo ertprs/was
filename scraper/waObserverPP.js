@@ -140,7 +140,21 @@ module.exports = async () => {
 						}
 					}
 
-					console.log(`data pasien: ${JSON.stringify(all)}`)
+
+					if(all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
+						for(let prop in all){
+							if(all[prop] === '' || !all[prop]){
+								delete all[prop]
+							}
+						}
+
+						//send wa here
+						all.no_hp = `62${all.no_hp.substr(1)}`
+						//console.log(JSON.stringify(all, null, 2));
+						console.log(`data pasien: ${JSON.stringify(all)}`)
+					} else {
+						console.log('tidak ada no hp')
+					}
 
 				}catch(err) {
 					console.log(`${new Date()} ${err}`)
@@ -158,15 +172,8 @@ module.exports = async () => {
 
 					try {
 						if(all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
-							for(let prop in all){
-								if(all[prop] === '' || !all[prop]){
-									delete all[prop]
-								}
-							}
 
 							//send wa here
-							all.no_hp = `62${all.no_hp.substr(1)}`
-							//console.log(JSON.stringify(all, null, 2));
 							
 							let name = all.nama
 							let number = all.no_hp
