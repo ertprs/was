@@ -96,7 +96,7 @@ module.exports = async () => {
           }
 
         } catch (err) {
-          throw(err)
+          console.error(err)
         }
 
       }
@@ -115,8 +115,6 @@ module.exports = async () => {
 			let jam = moment(event.timestamp, 'x').format('H')
 
 			let after, res, re, all
-
-			console.log(`new event => type: ${event.type}, table: ${event.table}, timestamp: ${event.timestamp}, tgl: ${tglDaftar}, jam: ${jam}`)
 
 			if( event.affectedRows.length) {
 				after = event.affectedRows[0].after
@@ -148,15 +146,15 @@ module.exports = async () => {
 							}
 						}
 
-						console.log(`${new Date()} ada no hp => nama: ${all.nama}, no hp: ${all.no_hp}`)
+						console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, nama: ${all.nama}, no hp: ${all.no_hp}`)
 						//send wa here
 						//console.log(JSON.stringify(all, null, 2));
 					} else {
-						console.log(`${new Date()} tdk ada no hp`)
+						console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, tdk ada no hp`)
 					}
 
 				}catch(err) {
-					console.log(`${new Date()} ${err}`)
+					console.error(`${new Date()} ${err}`)
 				}
 			}
 			
@@ -217,8 +215,7 @@ module.exports = async () => {
 								if (canSend) {
 									await page.type('#main > footer > .copyable-area', '\u000d')
 									//await page.click("#main > footer > ._3pkkz.copyable-area button._35EW6");
-									console.log(`${new Date()} msg sent`)
-									console.log(`${text}`)
+									console.log(`${new Date()} msg sent => ${text}`)
 								}
 							}
 					
@@ -239,7 +236,7 @@ module.exports = async () => {
 						} 
 
 					}catch(err){
-						console.log(err)
+						console.error(err)
 					}
 
 				}
