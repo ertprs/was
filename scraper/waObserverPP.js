@@ -116,7 +116,7 @@ module.exports = async () => {
 
 			let after, res, re, all
 
-			if( event.affectedRows.length) {
+			if( event.affectedRows.length && event.affectedRows[0].after && event.affectedRows[0].after.patient_id) {
 				after = event.affectedRows[0].after
 				try{
 					res = await connect(`SELECT * FROM patients WHERE id = "${after.patient_id}"`)
@@ -126,6 +126,7 @@ module.exports = async () => {
 					}, re)
 
 					if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && after.no_kartu && after.no_kartu.match(BPJS_REGEX)) {
+						re = null
 						res = await connect(`SELECT * FROM bpjs_verifications WHERE no_bpjs = "${after.no_kartu}"`)
 						if(res[0] && res[0].json_response && res[0].json_response.response) {
 							re = JSON.parse(res[0].json_response.response)
