@@ -96,7 +96,7 @@ module.exports = async () => {
           }
 
         } catch (err) {
-          throw(err)
+          console.error(err)
         }
 
       }
@@ -116,8 +116,6 @@ module.exports = async () => {
 
 			let after, res, re, all
 
-			console.log(`new event => type: ${event.type}, table: ${event.table}, timestamp: ${event.timestamp}, tgl: ${tglDaftar}, jam: ${jam}`)
-
 			if( event.affectedRows.length) {
 				after = event.affectedRows[0].after
 				try{
@@ -133,7 +131,7 @@ module.exports = async () => {
 							re = JSON.parse(res[0].json_response.response)
 							all = Object.assign({}, all, re)
 
-							if(all.no_hp.match(/^(08)([0-9]){1,12}$/) && all.noHP.match(/^(08)([0-9]){1,12}$/)) {
+							if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && all.noHP.match(/^(08)([0-9]){1,12}$/)) {
 								all.no_hp = all.noHP
 							}
 
@@ -148,16 +146,15 @@ module.exports = async () => {
 							}
 						}
 
+						console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, nama: ${all.nama}, no hp: ${all.no_hp}`)
 						//send wa here
-						all.no_hp = `62${all.no_hp.substr(1)}`
 						//console.log(JSON.stringify(all, null, 2));
-						console.log(`data pasien: ${JSON.stringify(all)}`)
 					} else {
-						console.log('tidak ada no hp')
+						console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, tdk ada no hp`)
 					}
 
 				}catch(err) {
-					console.log(`${new Date()} ${err}`)
+					console.error(`${new Date()} ${err}`)
 				}
 			}
 			
@@ -166,7 +163,7 @@ module.exports = async () => {
 				//let tglDaftar = moment(after.tanggal).format('DD-MM-YYYY')
 				//let jam = moment().format('H')
 
-				console.log(`new visits`)// ${JSON.stringify(after)}`)
+				//console.log(`new visits`)// ${JSON.stringify(after)}`)
 
 				if(tglDaftar === moment().format('DD-MM-YYYY')){//} && jam >= 8 ) {
 
@@ -174,10 +171,11 @@ module.exports = async () => {
 						if(all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
 
 							//send wa here
+							all.no_hp = `62${all.no_hp.substr(1)}`
 							
 							let name = all.nama
 							let number = all.no_hp
-							console.log(`kunj baru ${new Date()} => nama: ${name}, no hp: ${number}`)
+							console.log(`data pasien: ${JSON.stringify(all)}`)
 						
 							let text = `Terima kasih atas kunjungan ${name}, ke Puskesmas ${process.env.PUSKESMAS}.\n Mohon kesediaannya untuk dapat mengisi form kepuasan pelanggan berikut:\n ${process.env.FORM_LINK}\n`
 						
@@ -188,8 +186,7 @@ module.exports = async () => {
 					
 							halt = true
 					
-							await page
-              .goto(`https://web.whatsapp.com/send?phone=${number}&text=${text}`, {
+							await page.goto(`https://web.whatsapp.com/send?phone=${number}&text=${text}`, {
                 waitUntil: 'networkidle2',
                 timeout: 0
               })
@@ -218,8 +215,7 @@ module.exports = async () => {
 								if (canSend) {
 									await page.type('#main > footer > .copyable-area', '\u000d')
 									//await page.click("#main > footer > ._3pkkz.copyable-area button._35EW6");
-									console.log(`${new Date()} msg sent`)
-									console.log(`${text}`)
+									console.log(`${new Date()} msg sent => ${text}`)
 								}
 							}
 					
@@ -237,12 +233,10 @@ module.exports = async () => {
 					
 							await page.evaluate(evalWithMutationObserver)
 					
-						} else {
-							console.log(`${new Date()} tdk ada no hp`)
-						}
+						} 
 
 					}catch(err){
-						console.log(err)
+						console.error(err)
 					}
 
 				}
