@@ -5,6 +5,13 @@ const {
 	BPJS_REGEX,
 	NIK_REGEX
 } = require('../config')
+
+const pad = (n, width, z) => {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+
 const findQuery = Arr => {
 	//console.log(Arr)
 	let query = 'SELECT `id`, `nama`, `tgl_lahir`, `sex_id`, `alamat`,  `orchard_id`, `village_id`, `nik`, `no_kartu`, `no_hp` FROM `patients`';
@@ -14,6 +21,11 @@ const findQuery = Arr => {
 //	params = params.LowerCase()
 
 	if(params) {
+		if(params.match(/^([0-9]*)$/) && params.length < 6){
+			let oldParams = params
+			params = pad(params, 6)
+			console.log(`change parameter from ${oldParams} to ${params}`)
+		}
 		if(params.match(/^([^0-9]*)$/)) {
 			query +=  ' WHERE ( `nama` LIKE "%' + params.trim() + '%")';
 		} else if(params.match(RM_REGEX)) {
@@ -22,9 +34,9 @@ const findQuery = Arr => {
 			query +=  ' WHERE (`no_kartu` LIKE "' + params + '%")';
 		} else if(params.match(NIK_REGEX)) {
 			query +=  ' WHERE (`nik` LIKE "' + params + '%")';
-		} else if(params.match(/^(08)([0-9]){1,12}$/)) {
-			query +=  ' WHERE (`no_hp` LIKE "' + params + '%")';
-		} 
+		} //else if(params.match(/^(08)([0-9]){1,12}$/)) {
+			//query +=  ' WHERE (`no_hp` LIKE "' + params + '%")';
+		//} 
 	
 	}
 
@@ -32,12 +44,18 @@ const findQuery = Arr => {
 		params = Arr.shift()
 
 		if(params) {
+			if(params.match(/^([0-9]*)$/) && params.length < 6){
+				let oldParams = params
+				params = pad(params, 6)
+				console.log(`change parameter from ${oldParams} to ${params}`)
+			}
+
 			if(params.match(RM_REGEX)) {
-			query +=  ' AND (`id` LIKE "' + params + '%")';
+				query +=  ' AND (`id` LIKE "' + params + '%")';
 			} else if(params.match(BPJS_REGEX)) {
 				query +=  ' AND (`no_kartu` LIKE "' + params + '%")';
-			} else if(params.match(/^(08)([0-9]){1,12}$/)) {
-				query +=  ' AND (`no_hp` LIKE "' + params + '%")';
+			//} else if(params.match(/^(08)([0-9]){1,12}$/)) {
+			//	query +=  ' AND (`no_hp` LIKE "' + params + '%")';
 			} else if(params.match(NIK_REGEX)) {
 				query +=  ' AND (`nik` LIKE "' + params + '%")';
 			} else {

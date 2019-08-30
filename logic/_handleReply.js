@@ -166,7 +166,7 @@ module.exports = async (chat) => {
 				result += `Ditemukan ${resultArr.length} hasil${resultArr.length ? ':' : '.'}\n`
 
 				for (let res of resultArr){
-				result += `--------------\n(${resultArr.indexOf(res) + 1}) `
+				result += `(${resultArr.indexOf(res) + 1}) `
 					for (let prop in res){
 						if(prop == 'sex_id'){
 							(res[prop] == '1') ? result += `Laki-laki | ` : result += `Perempuan | `
