@@ -127,11 +127,11 @@ module.exports = async () => {
 
 					if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && after.no_kartu && after.no_kartu.match(BPJS_REGEX)) {
 						res = await connect(`SELECT * FROM bpjs_verifications WHERE no_bpjs = "${after.no_kartu}"`)
-						if(res[0].json_response.response) {
+						if(res[0] && res[0].json_response && res[0].json_response.response) {
 							re = JSON.parse(res[0].json_response.response)
 							all = Object.assign({}, all, re)
 
-							if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && all.noHP.match(/^(08)([0-9]){1,12}$/)) {
+							if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && all.noHP && all.noHP.match(/^(08)([0-9]){1,12}$/)) {
 								all.no_hp = all.noHP
 							}
 
