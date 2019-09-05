@@ -150,7 +150,7 @@ module.exports = async () => {
 						console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, nama: ${all.nama}, no hp: ${all.no_hp}`)
 						//send wa here
 						//console.log(JSON.stringify(all, null, 2));
-					} else {
+					} else if(event.type === 'INSERT') {
 						console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, tdk ada no hp`)
 					}
 
