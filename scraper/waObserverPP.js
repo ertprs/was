@@ -125,14 +125,14 @@ module.exports = async () => {
 						visit_id: after.id
 					}, re)
 
-					if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && after.no_kartu && after.no_kartu.match(BPJS_REGEX)) {
+					if( all.no_hp && !all.no_hp.match(/^(08)([0-9]){1,12}$/) && after.no_kartu && after.no_kartu.match(BPJS_REGEX)) {
 						re = null
 						res = await connect(`SELECT * FROM bpjs_verifications WHERE no_bpjs = "${after.no_kartu}"`)
 						if(res[0] && res[0].json_response && res[0].json_response.response) {
 							re = JSON.parse(res[0].json_response.response)
 							all = Object.assign({}, all, re)
 
-							if(!all.no_hp.match(/^(08)([0-9]){1,12}$/) && all.noHP && all.noHP.match(/^(08)([0-9]){1,12}$/)) {
+							if(all.noHP && all.noHP.match(/^(08)([0-9]){1,12}$/)) {
 								all.no_hp = all.noHP
 							}
 
@@ -140,7 +140,7 @@ module.exports = async () => {
 					}
 
 
-					if(all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
+					if(all.no_hp && all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
 						for(let prop in all){
 							if(all[prop] === '' || !all[prop]){
 								delete all[prop]
@@ -169,7 +169,7 @@ module.exports = async () => {
 				if(tglDaftar === moment().format('DD-MM-YYYY')){//} && jam >= 8 ) {
 
 					try {
-						if(all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
+						if(all.no_hp && all.no_hp.match(/^(08)([0-9]){1,12}$/)) {
 
 							//send wa here
 							all.no_hp = `62${all.no_hp.substr(1)}`
@@ -177,6 +177,8 @@ module.exports = async () => {
 							let name = all.nama
 							let number = all.no_hp
 							console.log(`data pasien: ${JSON.stringify(all)}`)
+
+							console.log(`waiting? ${halt}`)
 						
 							let text = `Terima kasih atas kunjungan ${name}, ke Puskesmas ${process.env.PUSKESMAS}.\n Mohon kesediaannya untuk dapat mengisi form kepuasan pelanggan berikut:\n ${process.env.FORM_LINK}\n`
 						

@@ -265,6 +265,14 @@ module.exports = async (chat) => {
 						let ada = poliArr.filter(e => e == poli)
 						if(ada.length){
 
+							if(poli === 'imunisasi' && tgl.weekday() !== 1 ) {
+								return `poli imunisasi hanya buka hari Selasa.\n`
+							}
+/*
+							if(poli === 'imunisasi' && tgl.weekday() !== 3 && tgl.weekday() !== 0) {
+								return `poli imunisasi hanya buka hari Senin dan Kamis.\n`
+							}
+
 							if(poli === 'tht' && tgl.weekday() !== 1 && tgl.weekday() !== 3) {
 								return `poli tht hanya buka hari Selasa dan Kamis.\n`
 							}
@@ -273,13 +281,6 @@ module.exports = async (chat) => {
 								return `poli fisioterapi, hanya bisa daftar via WA untuk jadwal hari Jum'at.\n`
 							}
 
-							if(poli === 'imunisasi' && tgl.weekday() !== 1 ) {
-								return `poli imunisasi hanya buka hari Selasa.\n`
-							}
-/*
-							if(poli === 'imunisasi' && tgl.weekday() !== 3 && tgl.weekday() !== 0) {
-								return `poli imunisasi hanya buka hari Senin dan Kamis.\n`
-							}
 */
 							if(poli === 'rujukan') {
 								poli = 'umum'
