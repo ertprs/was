@@ -1,5 +1,5 @@
-//const libur = require('./libur')
 const simpus = require('./_simpus')
+
 module.exports = async (hari, dddd, tgl, poli, rm) =>{
 	let result = await simpus(tgl, poli, rm)
 	if(hari === 'hariini'){

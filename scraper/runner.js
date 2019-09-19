@@ -1,18 +1,12 @@
 const path = require('path')
-const config = require('./config.js');
+const { browserConfig } = require('../config');
 const puppeteer = require('puppeteer');
 
 const Nightmare = require('nightmare');
-//require('nightmare-window-manager')(Nightmare);
 
-//const nightmare = require('nightmare-plus')
-//require('nightmare-real-mouse')(nightmare)
+const tmpPath = path.resolve(__dirname, browserConfig.data_dir);
 
-//const executablePath = findChrome().pop() || null;
-const tmpPath = path.resolve(__dirname, config.data_dir);
-//const networkIdleTimeout = 30000;
-//const stdin = process.stdin;
-const headless = !config.window;
+const headless = !browserConfig.window;
 
 
 const getLiburnas = () => new Nightmare({
@@ -24,24 +18,10 @@ const getLiburnas = () => new Nightmare({
 		images: false
 	}
 })
-/*
-const getPage = () => new Nightmare({
-	show: true,
-	webPreferences: {
-    preload: 'preload.js',
-		partition: 'persist: wa9',
-	//	nodeIntegration: false,
-	//	webSecurity: false,
-	//	allowRunningInsecureContent: true
-	}
-})
-*/
 
 const getPagePP = async () => {
 	const browser = await puppeteer.launch({
 		headless: headless,
-		//devtools: true,
-		//executablePath: executablePath,
 		userDataDir: tmpPath,
 		ignoreHTTPSErrors: true,
 		args: [
@@ -67,7 +47,6 @@ const getPagePP = async () => {
 	const page = await browser.newPage();
 	await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3641.0 Safari/537.36');
 
-	//await page.setViewport({width: 1366, height:768});
 	await page.setRequestInterception(true);
 
 	page.on('request', (request) => {
@@ -78,15 +57,12 @@ const getPagePP = async () => {
 }
 
 const getBrowser = async () => await puppeteer.launch({
-	//headless: false,
-	//devtools: true,
-	//userDataDir: './simpustmp',
+//	headless: false
 })
 
 module.exports = {
 	getLiburnas,
 	getPagePP,
-//	getPage,
 	getBrowser
 }
 

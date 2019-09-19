@@ -14,7 +14,7 @@ let unit = {}
 pols.map( ({ id, nama}) => unit[id] = nama )
 
 module.exports = async(tgl, poli, rm) => {
-	console.log(poli)
+	//console.log(poli)
 	rm.nama = rm.nama.trim()
 
 	let dial = ''
@@ -52,6 +52,7 @@ module.exports = async(tgl, poli, rm) => {
 		//console.log(terdaftar)
 		return terdaftar
 	} else {
+		console.log('belum kedaftar')
 		const browser = await getBrowser()
 
 		const simpusPage = await browser.newPage()

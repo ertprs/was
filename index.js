@@ -8,13 +8,13 @@ moment.locale('id')
 
 const liburnasObserver = require('./logic/liburnas')
 
-const waObserver = require('./scraper/waObserverPP')
+const sulla = require('./controllers/initializer')
+
+const start = require('./observer/starter')
+
+sulla.create().then(async client => await start(client));
 
 console.log('first run')
 console.log(moment().format('LLLL'))
 
-//liburnasObserver(moment)
-
 schedule('30 12 1 * *', liburnasObserver(moment))
-
-;(async () => await waObserver())()

@@ -23,6 +23,9 @@
     "moment": "^2.24.0",
     "nightmare": "^3.0.2",
     "node-cron": "^2.0.3",
-    "puppeteer": "^1.19.0"
+    "ora": "^3.4.0",
+    "puppeteer": "^1.19.0",
+    "qrcode-terminal": "^0.12.0",
+    "rxjs": "^6.5.3"
   }
 }
