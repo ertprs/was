@@ -11,7 +11,10 @@ module.exports = clickSel => {
 	//	user = chat.querySelector('span._1bX-5 > span') ? chat.querySelector('span._1bX-5 > span').innerText : undefined
 	//} else {
 	//	user = chat.querySelector('span._3NWy8 > span') && chat.querySelector('span._3NWy8 > span').getAttribute('title')
-		let user = chat.querySelector('span._19RFN').getAttribute('title')
+	let user
+	if(chat){
+		user = chat.querySelector('span._19RFN').getAttribute('title')
+	}
 //		user = chat.querySelector('span._1wjpf').getAttribute('title')
 	//}
 	//let lastMessage = chat.querySelector('span._2_LEW').getAttribute('title')

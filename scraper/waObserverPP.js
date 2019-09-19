@@ -15,7 +15,6 @@ const newChat = require('../logic/newChat')
  
 const { BPJS_REGEX } = require('../config')
 
-let halt
 
 const { getConnection, connect } = getconn()
 
@@ -30,6 +29,8 @@ module.exports = async () => {
 			mysql: true,
 		},
 	});
+
+	let halt = false
 
 	await instance.start()
 
@@ -76,14 +77,19 @@ module.exports = async () => {
 
           let msg = Object.assign({}, chat)
           if (msg && msg !== null && msg.user) {
-            console.log(`${new Date()} new msg`)
-
-            while (halt) {
+            console.log(`${new Date()} new msg: ${JSON.stringify(msg)}`)
+							
+						console.log(`waiting? ${halt}`)
+						
+						while (halt) {
               await new Promise(resolve => setTimeout(() => resolve(), 1000))
 
 							//console.log(`tunggu ${new Date()}`)
 
 						}
+
+						//await new Promise(resolve => setTimeout(() => resolve(), 1000))
+
             halt = true
 
             await page.type('#side > div._2HS9r > div > label > input', msg.user)
@@ -91,7 +97,9 @@ module.exports = async () => {
             //await page.type('#side > div._3CPl4 > div > label > input', '\u000d')
             await page.type('#side > div._2HS9r > div > label > input', '\u000d')
             await newChat(page, chat)
-            halt = false
+						halt = false
+						
+						console.log(`waiting? ${halt}`)
 
           }
 
@@ -147,7 +155,10 @@ module.exports = async () => {
 							}
 						}
 
-						console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, nama: ${all.nama}, no hp: ${all.no_hp}`)
+						if(event.type === 'INSERT'){
+							console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, nama: ${all.nama}, no hp: ${all.no_hp}`)
+						}
+
 						//send wa here
 						//console.log(JSON.stringify(all, null, 2));
 					} else if(event.type === 'INSERT') {
@@ -187,6 +198,10 @@ module.exports = async () => {
 							//	console.log(`tunggu ${new Date()}`)
 							}
 					
+							console.log(`waiting? ${halt}`)
+
+							//await new Promise(resolve=>setTimeout(()=>resolve(), 1000))
+
 							halt = true
 					
 							await page.goto(`https://web.whatsapp.com/send?phone=${number}&text=${text}`, {

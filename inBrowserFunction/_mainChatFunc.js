@@ -1,4 +1,4 @@
-module.exports = mainChatSel => {
+module.exports = (mainChatSel, mainChatSel2) => {
 	const elementCssPath = (element, options) => {
 
 		var defaultOptions = {
@@ -109,29 +109,59 @@ module.exports = mainChatSel => {
 	}
 	let newMainChatElArr = []
 	let mainChatElArr = document.querySelectorAll(mainChatSel)
+
+	if(!mainChatElArr.length) {
+		mainChatElArr = document.querySelectorAll(mainChatSel2)
+	}
+
 	for (let mainChatEl of mainChatElArr){
 		let newChatText = {}
 		newChatText.selector = getCss(mainChatEl)
 		let timeAndUserEl = mainChatEl.querySelector('.copyable-text[data-pre-plain-text]')
 		if(timeAndUserEl && timeAndUserEl.hasAttribute('data-pre-plain-text')){
-		let timeAndUser = timeAndUserEl.getAttribute('data-pre-plain-text')
-		if(timeAndUser){
-			timeAndUser = timeAndUser.replace('[', ']')
-			let timeAndUserArr = timeAndUser.split(']')
-			newChatText.time = timeAndUserArr[1].split(',')[0]
-			newChatText.date = timeAndUserArr[1].split(',')[1].trim()
-			newChatText.user = timeAndUserArr[2].trim().replace(':', '')
+
+			let timeAndUser = timeAndUserEl.getAttribute('data-pre-plain-text')
+
+			if(timeAndUser){
+
+				timeAndUser = timeAndUser.replace('[', ']')
+
+				let timeAndUserArr = timeAndUser.split(']')
+
+				newChatText.time = timeAndUserArr[1].split(',')[0]
+
+				newChatText.date = timeAndUserArr[1].split(',')[1].trim()
+
+				newChatText.user = timeAndUserArr[2].trim().replace(':', '')
+
+			}
+
 		}
-	}
-	let content = ''
-	let contentArr = mainChatEl.childNodes
-	if(contentArr.length){
-		content += getChildc(contentArr)
-	}
-	if(content !== ''){
-		newChatText.content = content
-	}
+
+
+		let content = ''
+
+		let contentArr = mainChatEl.childNodes
+
+
+		if(contentArr.length){
+
+			content += getChildc(contentArr)
+
+		}
+
+
+		if(content !== ''){
+
+			newChatText.content = content
+
+		}
+
+		
+
 		newMainChatElArr.push(newChatText)
-	}
-	return newMainChatElArr	
+	
+}
+
+return newMainChatElArr	
 }

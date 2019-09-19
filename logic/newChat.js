@@ -6,19 +6,26 @@ const handleUnstructured = require('../logic/handleUnstructured')
 
 const {
   mainChatSel, 
+  mainChatSel2, 
   keywords
 } = require('../config')
 
 module.exports = async (page, chat) => {
+  console.log(chat)
   //console.log(`${new Date()} handle new chat`)
   let mainChatElArr = []
   let newMainChatElArr = []
+  //console.log(mainChatElArr.length)
+  //console.log(Number(chat.newNotif))
+  //console.log(mainChatElArr.length < Number(chat.newNotif))
   while (mainChatElArr.length < Number(chat.newNotif)) {
-    mainChatElArr = await page.evaluate(mainChatFunc, mainChatSel)
+    mainChatElArr = await page.evaluate(mainChatFunc, mainChatSel, mainChatSel2)
     if (!Array.isArray(mainChatElArr)) {
+      //console.log(mainChatElArr)
       mainChatElArr = []
     }
   }
+  //console.log(mainChatElArr)
   while (newMainChatElArr.length < Number(chat.newNotif)) {
     let newChatText = mainChatElArr.pop()
 
@@ -28,6 +35,7 @@ module.exports = async (page, chat) => {
     //if (chat.isGroup) {
      // newChatText.group = chat.group
     //}
+    //console.log(newChatText)
     newChatText.user = chat.user
     let containsPandawa = newChatText.content && newChatText.content.toLowerCase().includes('pandawa')
     let isTag = newChatText.content && newChatText.content.charAt(0) == '#' ? true : false
