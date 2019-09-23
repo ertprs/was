@@ -2,10 +2,12 @@ const MySQLEvents = require('@rodrigogs/mysql-events');
 
 const getconn = require('../db/_mysqlconn')
 
-const { getConnection } = getconn()
+const { getPool, getConnection } = getconn()
 
 module.exports = async () => {
-	const connection = await getConnection()
+	const pool = getPool
+
+	const connection = await getConnection(pool)
 
 	const instance = new MySQLEvents(connection, {
 		startAtEnd: true,
@@ -16,8 +18,8 @@ module.exports = async () => {
   
 	await instance.start()
 
-  instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, console.error);
-	instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, console.error);
+  instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, err => console.error(`${new Date()}: ${err}`));
+	instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, err => console.error(`${new Date()}: ${err}`));
 
   return { 
     instance,
