@@ -18,12 +18,9 @@ module.exports = async () => {
   
 	await instance.start()
 
-  instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, err => console.error(`${new Date()}: ${err}`));
-	instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, err => console.error(`${new Date()}: ${err}`));
-
   return { 
-    instance,
-    STATEMENTS: MySQLEvents.STATEMENTS
+		instance,
+		MySQLEvents
   }
 
 }

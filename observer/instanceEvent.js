@@ -7,6 +7,8 @@ module.exports = async ( event, client) => {
   let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
 
   let patient = await getPatient(event)
+
+  console.log(JSON.stringify(patient))
   
   if( event.type === 'INSERT' /* && event.table === 'visits'*/ ) {
     

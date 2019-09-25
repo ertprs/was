@@ -1,3 +1,6 @@
+const moment = require('moment')
+moment.locale('id')
+
 const getconn = require('../db/_mysqlconn')
 
 const { 
@@ -8,7 +11,7 @@ const { connect } = getconn()
 
 module.exports = async event => {
   let after, res, re, all
-
+  let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
   let jam = moment(event.timestamp, 'x').format('H')
 
   if( event.affectedRows.length && event.affectedRows[0].after && event.affectedRows[0].after.patient_id) {
@@ -42,9 +45,6 @@ module.exports = async event => {
           }
         }
 
-        if(event.type === 'INSERT'){
-          console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, nama: ${all.nama}, no hp: ${all.no_hp}`)
-        }
 
       } else if(event.type === 'INSERT') {
         console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, tdk ada no hp`)
