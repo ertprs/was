@@ -1,3 +1,8 @@
+const moment = require('moment')
+moment.locale('id')
+
+const getPatient = require('./getPatient')
+
 const processTag = require('./processTag')
 
 const getInstance = require('./getInstance')
@@ -7,7 +12,7 @@ const generateReply = require('./generateReply')
 module.exports = async client => {
   const {
     instance,
-    STATEMENTS
+    MySQLEvents
   } = await getInstance()
 
   client.onMessage(async message => {
@@ -39,10 +44,50 @@ module.exports = async client => {
   instance.addTrigger({
     name: 'NEW_VISITS',
     expression: 'simpus.visits',
-    statement: STATEMENTS.ALL, //INSERT,
+    statement: MySQLEvents.STATEMENTS.ALL, //INSERT,
     onEvent: async (event) => { // You will receive the events here
-      await instanceEvent(event, client)
+     // console.log(`event: ${JSON.stringify(event)}`)
+//      await instanceEvent(event, client)
+      let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
+
+      let patient = await getPatient(event)
+
+    //  console.log(JSON.stringify(patient))
+
+      if( event.type === 'INSERT' /* && event.table === 'visits'*/ ) {
+        
+        if(tglDaftar === moment().format('DD-MM-YYYY')){//} && jam >= 8 ) {
+
+          try {
+            if(patient && patient.no_hp && patient.no_hp.match(/^(08)([0-9]){1,12}$/)) {
+
+              //send wa here
+              patient.no_hp = `62${patient.no_hp.substr(1)}`
+              
+              let name = patient.nama
+              console.log(`data pasien: ${JSON.stringify(patient)}`)
+
+              let text = `Terima kasih atas kunjungan ${name}, ke Puskesmas ${process.env.PUSKESMAS}.\n Mohon kesediaannya untuk dapat mengisi form kepuasan pelanggan berikut:\n ${process.env.FORM_LINK}\n`
+
+              let from = `${patient.no_hp}@c.us`
+
+              await client.sendText( from, text)
+        
+            } 
+
+          }catch(err){
+            console.error(err)
+          }
+
+        }
+
+      }
+
     },
   });
+
+  instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, err => console.error(`${new Date()}: ${JSON.stringify(err)}`));
+	instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, err => console.error(`${new Date()}: ${JSON.stringify(err)}`));
+
 
 }

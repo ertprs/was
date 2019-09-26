@@ -88,10 +88,12 @@ module.exports = async(tgl, poli, rm) => {
 		pols.map( ({ id, alias }) => {
 			if( alias && Array.isArray(alias) && alias.indexOf(poli) > -1 ) {
 				idPoli = id
-			} else {
-				idPoli = '01'
-			}
+			} 
 		})
+
+		if(!idPoli) {
+			idPoli = '01'
+		}
 
 		await simpusPage.click(`input.cb-unit-id[value='${idPoli}']`)
 
