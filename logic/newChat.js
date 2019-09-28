@@ -87,7 +87,7 @@ module.exports = async (page, chat) => {
       }
 
     } catch (err) {
-      console.log(`${new Date()} ${err}`)
+      console.error(`${new Date()} ${err}`)
     }
 
   }

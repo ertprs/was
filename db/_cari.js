@@ -89,10 +89,10 @@ module.exports = async (chatArr) => await new Promise ( resolve =>{
 
 	if(query !== 'SELECT `id`, `nama`, `tgl_lahir`, `sex_id`, `alamat`,  `orchard_id`, `village_id`, `nik`, `no_kartu`, `no_hp` FROM `patients`') {
 		pool.getConnection( (err, connection) => {
-			err ? console.log(`${new Date()} error: ${err.stack}`) : '' //console.log(`connected id: ${connection.threadId}`);
+			err ? console.error(`${new Date()} error: ${err.stack}`) : '' //console.log(`connected id: ${connection.threadId}`);
 			connection.query(query, (err, results, fields) => {
 				let res = []
-				err ? console.log(`${new Date()} error querying`) : ''
+				err ? console.error(`${new Date()} error querying`) : ''
 
 				for(let result of results) {
 					for(let prop in result){

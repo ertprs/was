@@ -85,7 +85,7 @@ module.exports = async (page, newChatText) => {
     try {
       await handleReply(page, newChatText)
     } catch (err) {
-      console.log(`${new Date()} ${err}`)
+      console.error(`${new Date()} ${err}`)
     }
 
   }
