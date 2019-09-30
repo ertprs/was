@@ -13,7 +13,7 @@ module.exports = async (page, newChatText) => {
     console.log(`${new Date()} ${newChatText.reply}`)
 
   } catch (err) {
-    console.log(`${new Date()} ${err}`)
+    console.error(`${new Date()} ${err}`)
   }
 
 }
