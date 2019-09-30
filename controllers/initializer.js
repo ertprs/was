@@ -3,7 +3,9 @@ const { Whatsapp } = require('../api/whatsapp')
 const { isAuthenticated, isInsideChat, retrieveQR } = require('./auth')
 const { initWhatsapp, injectApi } = require('./browser')
 
-const spinner = ora();
+const spinner = ora({
+  stream: process.stdout
+});
 
 /**
  * Should be called to initialize whatsapp client
