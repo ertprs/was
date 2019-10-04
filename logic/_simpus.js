@@ -85,17 +85,22 @@ module.exports = async(tgl, poli, rm) => {
 		poli = poli.toLowerCase()
 
 		let idPoli
-		pols.map( ({ id, alias }) => {
+		let bpjsPoliId
+		pols.map( ({ id, alias, bpjs_id }) => {
 			if( alias && Array.isArray(alias) && alias.indexOf(poli) > -1 ) {
 				idPoli = id
+				bpjsPoliId = bpjs_id
 			} 
 		})
 
 		if(!idPoli) {
 			idPoli = '01'
+			bpjsPoliId = '001'
 		}
 
 		await simpusPage.click(`input.cb-unit-id[value='${idPoli}']`)
+
+		await simpusPage.select('select#kdpoli', bpjsPoliId)
 
 		await simpusPage.type('#patient_id', rm.id)
 
@@ -126,6 +131,7 @@ module.exports = async(tgl, poli, rm) => {
 				return false
 			})
 		}
+
 		if(rm.no_kartu && rm.no_kartu.length == 13){
 			console.log(`${new Date()} no kartu ${rm.no_kartu}`)
 			let verified
