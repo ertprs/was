@@ -6,7 +6,7 @@ exports.initWhatsapp = async () => {
   const browser = await initBrowser();
   const waPage = await getWhatsappPage(browser);
 
-  await waPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3641.0 Safari/537.36');
+  await waPage.setUserAgent('Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36');
 
   await waPage.setRequestInterception(true);
 
@@ -30,10 +30,11 @@ exports.injectApi = async (page) => {
 }
 
 async function initBrowser() {
+  console.log(process.cwd())
   const browser = await puppeteer.launch({
-    //headless: false,
+    // headless: false,
     headless: true,
-		ignoreHTTPSErrors: true,
+		// ignoreHTTPSErrors: true,
     devtools: false,
     userDataDir: path.join(process.cwd(), 'tmp'),
     args: [...puppeteerConfig.chroniumArgs]

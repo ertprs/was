@@ -32,6 +32,11 @@ const getConnection = async () => {
 					resolve(connection)                         // lost due to either server restart, or a
 				} 
 			});
+
+			setInterval(function () {
+				connection.query('SELECT 1');
+			}, 5000);
+			
 			resolve(connection)
 		})
 	})

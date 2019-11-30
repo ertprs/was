@@ -17,6 +17,8 @@ module.exports = async(tgl, poli, rm) => {
 	//console.log(poli)
 	rm.nama = rm.nama.trim()
 
+	// console.log(JSON.stringify(rm))
+
 	let dial = ''
 	let terdaftar = ''
 
@@ -52,7 +54,7 @@ module.exports = async(tgl, poli, rm) => {
 		//console.log(terdaftar)
 		return terdaftar
 	} else {
-		console.log('belum kedaftar')
+		// console.log('belum kedaftar')
 		const browser = await getBrowser()
 
 		const simpusPage = await browser.newPage()
@@ -79,22 +81,27 @@ module.exports = async(tgl, poli, rm) => {
 			await simpusPage.click('input[type="submit"][value="LOGIN"]')
 		}
 
-		await simpusPage.goto(`${SIMPUS_URL}visits/add_registrasi`)
+		await simpusPage.goto(`${SIMPUS_URL}visits/add_registrasi`, {
+			waitUntil: 'networkidle0'
+		})
 		
 		await simpusPage.evaluate(tgl=> document.getElementById('tglDaftar').setAttribute('value', tgl), tgl)
 		poli = poli.toLowerCase()
 
 		let idPoli
 		let bpjsPoliId
-		pols.map( ({ id, alias, bpjs_id }) => {
-			if( alias && Array.isArray(alias) && alias.indexOf(poli) > -1 ) {
-				idPoli = id
-				bpjsPoliId = bpjs_id
+		pols.map( ( pol ) => {
+			if( pol.alias && Array.isArray(pol.alias) && pol.alias.indexOf(poli) > -1 ) {
+				idPoli = pol.id
+				bpjsPoliId = pol.bpjs_id
 			} 
 		})
 
 		if(!idPoli) {
 			idPoli = '01'
+		}
+
+		if(!bpjsPoliId){
 			bpjsPoliId = '001'
 		}
 
@@ -102,7 +109,11 @@ module.exports = async(tgl, poli, rm) => {
 
 		await simpusPage.select('select#kdpoli', bpjsPoliId)
 
+		console.log('will search')
+
 		await simpusPage.type('#patient_id', rm.id)
+
+		console.log('type id patient done')
 
 		await simpusPage.click('#searchidbtn')
 

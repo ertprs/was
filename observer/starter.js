@@ -15,8 +15,13 @@ module.exports = async client => {
     MySQLEvents
   } = await getInstance()
 
+  // let chats = await client.getAllChats(true)
+
+  // console.log(chats)
+
   client.onMessage(async message => {
 
+    // console.log(message)
     if(message.type === 'chat' && !message.isGroupMsg && !message.isMMS && !message.isMedia && message.chatId !== 'status@broadcast') {
 
       console.log(`pesan baru dari: ${message.sender.name}, chat id: ${message.chat.id}, isi: ${message.body}`)
@@ -55,14 +60,14 @@ module.exports = async client => {
     //  console.log(JSON.stringify(patient))
 
       if( event.type === 'INSERT' /* && event.table === 'visits'*/ ) {
-        
+
         if(tglDaftar === moment().format('DD-MM-YYYY')){//} && jam >= 8 ) {
 
           if(patient && patient.no_hp && patient.no_hp.match(/^(08)([0-9]){1,12}$/)) {
 
             //send wa here
             patient.no_hp = `62${patient.no_hp.substr(1)}`
-            
+
             let name = patient.nama
             console.log(`data pasien: ${JSON.stringify(patient)}`)
 
@@ -74,10 +79,10 @@ module.exports = async client => {
               await client.sendText( from, text)
               console.log(`send text to: ${from}, isi: ${text}`)
             } catch (err) {
-              console.error(`send text error: ${JSON.stringify(err)}`)
+              console.error(`${tglDaftar} jam ${moment(event.timestamp, 'x').format('H')} send text error: ${JSON.stringify(err)}`)
             }
-      
-          } 
+
+          }
 
         }
 
@@ -87,7 +92,6 @@ module.exports = async client => {
   });
 
   instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, err => console.error(`${new Date()}: ${JSON.stringify(err)}`));
-	instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, err => console.error(`${new Date()}: ${JSON.stringify(err)}`));
-
+  instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, err => console.error(`${new Date()}: ${JSON.stringify(err)}`));
 
 }

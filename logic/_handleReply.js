@@ -241,7 +241,8 @@ module.exports = async (chat) => {
 					tgl = moment().add(2, 'd')
 					break
 				default:
-					result = 'Hari periksa tidak sesuai referensi sistem.\nGunakan #besok, #besuk atau #lusa.'
+					result = 'Hari periksa tidak sesuai referensi sistem.\nGunakan #sekarang, #hariini, #besok, #besuk atau #lusa.'
+					// result = 'Hari periksa tidak sesuai referensi sistem.\nGunakan #besok, #besuk atau #lusa.'
 					return result + '\n'
 			}
 			if(!result){

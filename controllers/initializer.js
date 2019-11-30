@@ -32,6 +32,9 @@ exports.create =  async () => {
 
   spinner.start('Injecting api');
   waPage = await injectApi(waPage);
+
+  spinner.succeed();
+
   spinner.succeed('Whatsapp is ready');
 
   return new Whatsapp(waPage);
