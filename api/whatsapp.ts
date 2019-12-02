@@ -7,6 +7,7 @@ import { Id } from './model/id';
 
 declare module WAPI {
   const waitNewMessages: (rmCallback: boolean, callback: Function) => void;
+  const sendMessageToID: (to: string, content: string) => void;
   const sendMessage: (to: string, content: string) => void;
   const sendSeen: (to: string) => void;
   const getAllContacts: () => Contact[];
@@ -30,6 +31,21 @@ export class Whatsapp {
   public onMessage(fn: (message: Message) => void) {
     this.page.exposeFunction(ExposedFn.OnMessage, (message: Message) =>
       fn(message)
+    );
+  }
+
+  /**
+   * Sends a text message to given chat
+   * @param to chat id: xxxxx@us.c
+   * @param content text message
+   */
+  public async sendTextToID(to: string, content: string) {
+    return await this.page.evaluate(
+      ({ to, content }) => {
+        // WAPI.sendSeen(to);
+        WAPI.sendMessageToID(to, content);
+      },
+      { to, content }
     );
   }
 

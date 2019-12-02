@@ -14,8 +14,9 @@ module.exports = async event => {
   let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
   let jam = moment(event.timestamp, 'x').format('H')
 
-  if( event.affectedRows.length && event.affectedRows[0].after && event.affectedRows[0].after.patient_id) {
-    after = event.affectedRows[0].after
+  if( event.row && event.row.patient_id) {
+  // if( event.affectedRows.length && event.affectedRows[0].after && event.affectedRows[0].after.patient_id) {
+    after = event.row
 
     try{
       res = await connect(`SELECT * FROM patients WHERE id = "${after.patient_id}"`)
@@ -45,9 +46,10 @@ module.exports = async event => {
           }
         }
 
+        // console.log(JSON.stringify(all))
 
       } else if(event.type === 'INSERT') {
-        console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, tdk ada no hp`)
+        // console.log(`new event => type: ${event.type}, tgl: ${tglDaftar}, jam: ${jam}, tdk ada no hp`)
       }
 
     }catch(err) {

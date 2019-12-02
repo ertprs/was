@@ -10,7 +10,7 @@ const liburnasObserver = require('./logic/liburnas')
 
 const sulla = require('./controllers/initializer')
 
-const start = require('./observer/starter')
+const start = require('./observer/redis-observer')
 
 sulla.create().then(async client => await start(client));
 
