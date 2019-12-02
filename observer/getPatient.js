@@ -11,8 +11,8 @@ const { connect } = getconn()
 
 module.exports = async event => {
   let after, res, re, all
-  let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
-  let jam = moment(event.timestamp, 'x').format('H')
+  // let tglDaftar = moment(event.timestamp, 'x').format('DD-MM-YYYY')
+  // let jam = moment(event.timestamp, 'x').format('H')
 
   if( event.row && event.row.patient_id) {
   // if( event.affectedRows.length && event.affectedRows[0].after && event.affectedRows[0].after.patient_id) {
